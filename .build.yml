@@ -1,0 +1,20 @@
+# SourceHut Build Manifest
+image: alpine/latest
+oauth: pages.sr.ht/PAGES:RW
+packages:
+    - nodejs
+    - yarn
+    - hut
+environment:
+    site: unexpected-keyboard-layout-editor.lixquid.com
+sources:
+    - https://github.com/lixquid/app-unexpected-keyboard-layout-editor
+tasks:
+    - build: |
+          cd *
+          yarn install
+          yarn build
+    - package: |
+          cd */dist
+          tar czvf ../dist.tgz *
+          hut pages publish -d $site ../dist.tgz
