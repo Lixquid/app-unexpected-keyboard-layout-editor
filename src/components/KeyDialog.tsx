@@ -1,6 +1,6 @@
 import { useState } from "preact/hooks";
 import { KeyData } from "../lib/data";
-import { KeyInput } from "./KeyInput";
+import { KeyLegend } from "./KeyLegend";
 
 /** Props for the KeyDialog component */
 export interface KeyDialogProps {
@@ -32,6 +32,17 @@ export function KeyDialog(props: KeyDialogProps) {
     const [showCornerKeys, setShowCornerKeys] = useState(false);
     const [showEdgeKeys, setShowEdgeKeys] = useState(false);
     const [showAdvanced, setShowAdvanced] = useState(false);
+    const [selectedRegion, setSelectedRegion] = useState<
+        | "key0"
+        | "key1"
+        | "key2"
+        | "key3"
+        | "key4"
+        | "key5"
+        | "key6"
+        | "key7"
+        | "key8"
+    >("key0");
 
     return (
         <>
@@ -48,82 +59,246 @@ export function KeyDialog(props: KeyDialogProps) {
                             />
                         </div>
                         <div class="modal-body text-wrap">
-                            <KeyInput
-                                entry="key0"
-                                input={key0}
-                                updateInput={setKey0}
-                            />
+                            <p class="mb-1">Select a region to edit.</p>
+                            <p>
+                                The center key is sent when tapping the key, and
+                                the surrounding keys are sent when swiping in
+                                the direction of those regions.
+                            </p>
+                            <div class="d-flex justify-content-center mb-3">
+                                <div
+                                    style={{
+                                        position: "relative",
+                                        aspectRatio: "1.25/1",
+                                        width: "20em",
+                                    }}
+                                >
+                                    <button
+                                        class={`btn btn-secondary position-absolute ${
+                                            selectedRegion === "key0" &&
+                                            "active"
+                                        }`}
+                                        style={{
+                                            top: "30%",
+                                            left: "30%",
+                                            width: "40%",
+                                            height: "40%",
+                                        }}
+                                        onClick={() =>
+                                            setSelectedRegion("key0")
+                                        }
+                                        title="Tap Input"
+                                    >
+                                        <KeyLegend legend={key0} />
+                                    </button>
+                                    <button
+                                        class={`btn btn-secondary position-absolute ${
+                                            selectedRegion === "key1" &&
+                                            "active"
+                                        }`}
+                                        style={{
+                                            top: "0%",
+                                            left: "0%",
+                                            width: "25%",
+                                            height: "25%",
+                                        }}
+                                        onClick={() =>
+                                            setSelectedRegion("key1")
+                                        }
+                                        title="Swipe Up-Left Input"
+                                    >
+                                        <KeyLegend legend={key1} />
+                                    </button>
+                                    <button
+                                        class={`btn btn-secondary position-absolute ${
+                                            selectedRegion === "key2" &&
+                                            "active"
+                                        }`}
+                                        style={{
+                                            top: "0%",
+                                            right: "0%",
+                                            width: "25%",
+                                            height: "25%",
+                                        }}
+                                        onClick={() =>
+                                            setSelectedRegion("key2")
+                                        }
+                                        title="Swipe Up-Right Input"
+                                    >
+                                        <KeyLegend legend={key2} />
+                                    </button>
+                                    <button
+                                        class={`btn btn-secondary position-absolute ${
+                                            selectedRegion === "key3" &&
+                                            "active"
+                                        }`}
+                                        style={{
+                                            bottom: "0%",
+                                            left: "0%",
+                                            width: "25%",
+                                            height: "25%",
+                                        }}
+                                        onClick={() =>
+                                            setSelectedRegion("key3")
+                                        }
+                                        title="Swipe Down-Left Input"
+                                    >
+                                        <KeyLegend legend={key3} />
+                                    </button>
+                                    <button
+                                        class={`btn btn-secondary position-absolute ${
+                                            selectedRegion === "key4" &&
+                                            "active"
+                                        }`}
+                                        style={{
+                                            bottom: "0%",
+                                            right: "0%",
+                                            width: "25%",
+                                            height: "25%",
+                                        }}
+                                        onClick={() =>
+                                            setSelectedRegion("key4")
+                                        }
+                                        title="Swipe Down-Right Input"
+                                    >
+                                        <KeyLegend legend={key4} />
+                                    </button>
+                                    <button
+                                        class={`btn btn-secondary position-absolute ${
+                                            selectedRegion === "key5" &&
+                                            "active"
+                                        }`}
+                                        style={{
+                                            left: "0%",
+                                            top: "30%",
+                                            width: "25%",
+                                            height: "40%",
+                                        }}
+                                        onClick={() =>
+                                            setSelectedRegion("key5")
+                                        }
+                                        title="Swipe Left Input"
+                                    >
+                                        <KeyLegend legend={key5} />
+                                    </button>
+                                    <button
+                                        class={`btn btn-secondary position-absolute ${
+                                            selectedRegion === "key6" &&
+                                            "active"
+                                        }`}
+                                        style={{
+                                            right: "0%",
+                                            top: "30%",
+                                            width: "25%",
+                                            height: "40%",
+                                        }}
+                                        onClick={() =>
+                                            setSelectedRegion("key6")
+                                        }
+                                        title="Swipe Right Input"
+                                    >
+                                        <KeyLegend legend={key6} />
+                                    </button>
+                                    <button
+                                        class={`btn btn-secondary position-absolute ${
+                                            selectedRegion === "key7" &&
+                                            "active"
+                                        }`}
+                                        style={{
+                                            top: "0%",
+                                            left: "30%",
+                                            width: "40%",
+                                            height: "25%",
+                                        }}
+                                        onClick={() =>
+                                            setSelectedRegion("key7")
+                                        }
+                                        title="Swipe Up Input"
+                                    >
+                                        <KeyLegend legend={key7} />
+                                    </button>
+                                    <button
+                                        class={`btn btn-secondary position-absolute ${
+                                            selectedRegion === "key8" &&
+                                            "active"
+                                        }`}
+                                        style={{
+                                            bottom: "0%",
+                                            left: "30%",
+                                            width: "40%",
+                                            height: "25%",
+                                        }}
+                                        onClick={() =>
+                                            setSelectedRegion("key8")
+                                        }
+                                        title="Swipe Down Input"
+                                    >
+                                        <KeyLegend legend={key8} />
+                                    </button>
+                                </div>
+                            </div>
 
                             <div class="mb-3">
-                                <button
-                                    class="btn btn-outline-secondary dropdown-toggle me-2"
-                                    onClick={() =>
-                                        setShowCornerKeys(!showCornerKeys)
+                                <input
+                                    class="form-control"
+                                    type="text"
+                                    value={
+                                        selectedRegion === "key0"
+                                            ? key0
+                                            : selectedRegion === "key1"
+                                            ? key1
+                                            : selectedRegion === "key2"
+                                            ? key2
+                                            : selectedRegion === "key3"
+                                            ? key3
+                                            : selectedRegion === "key4"
+                                            ? key4
+                                            : selectedRegion === "key5"
+                                            ? key5
+                                            : selectedRegion === "key6"
+                                            ? key6
+                                            : selectedRegion === "key7"
+                                            ? key7
+                                            : selectedRegion === "key8"
+                                            ? key8
+                                            : ""
                                     }
-                                >
-                                    {showCornerKeys ? "Hide" : "Show"} Corner
-                                    Keys
-                                </button>
-                                <button
-                                    class="btn btn-outline-secondary dropdown-toggle me-2"
-                                    onClick={() =>
-                                        setShowEdgeKeys(!showEdgeKeys)
-                                    }
-                                >
-                                    {showEdgeKeys ? "Hide" : "Show"} Edge Keys
-                                </button>
+                                    onInput={(e) => {
+                                        const value = (
+                                            e.target as HTMLInputElement
+                                        ).value;
+                                        switch (selectedRegion) {
+                                            case "key0":
+                                                setKey0(value);
+                                                break;
+                                            case "key1":
+                                                setKey1(value);
+                                                break;
+                                            case "key2":
+                                                setKey2(value);
+                                                break;
+                                            case "key3":
+                                                setKey3(value);
+                                                break;
+                                            case "key4":
+                                                setKey4(value);
+                                                break;
+                                            case "key5":
+                                                setKey5(value);
+                                                break;
+                                            case "key6":
+                                                setKey6(value);
+                                                break;
+                                            case "key7":
+                                                setKey7(value);
+                                                break;
+                                            case "key8":
+                                                setKey8(value);
+                                                break;
+                                        }
+                                    }}
+                                />
                             </div>
-                            {/* Corner Keys */}
-                            {showCornerKeys && (
-                                <>
-                                    <KeyInput
-                                        entry="key1"
-                                        input={key1}
-                                        updateInput={setKey1}
-                                    />
-                                    <KeyInput
-                                        entry="key2"
-                                        input={key2}
-                                        updateInput={setKey2}
-                                    />
-                                    <KeyInput
-                                        entry="key3"
-                                        input={key3}
-                                        updateInput={setKey3}
-                                    />
-                                    <KeyInput
-                                        entry="key4"
-                                        input={key4}
-                                        updateInput={setKey4}
-                                    />
-                                </>
-                            )}
-
-                            {/* Edge Keys */}
-                            {showEdgeKeys && (
-                                <>
-                                    <KeyInput
-                                        entry="key5"
-                                        input={key5}
-                                        updateInput={setKey5}
-                                    />
-                                    <KeyInput
-                                        entry="key6"
-                                        input={key6}
-                                        updateInput={setKey6}
-                                    />
-                                    <KeyInput
-                                        entry="key7"
-                                        input={key7}
-                                        updateInput={setKey7}
-                                    />
-                                    <KeyInput
-                                        entry="key8"
-                                        input={key8}
-                                        updateInput={setKey8}
-                                    />
-                                </>
-                            )}
 
                             <button
                                 class="btn btn-outline-secondary dropdown-toggle"
