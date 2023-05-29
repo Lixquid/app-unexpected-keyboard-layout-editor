@@ -96,6 +96,12 @@ export function App() {
                     </div>
                 </div>
                 <ExportCard keyboard={keyboard} />
+                <div class="mt-5 text-end">
+                    <a href="https://github.com/lixquid/app-unexpected-keyboard-layout-editor">
+                        <i class="bi bi-box-arrow-up-right me-2" />
+                        Source code
+                    </a>
+                </div>
             </div>
             {showKeyboardDialog && (
                 <KeyboardDialog
