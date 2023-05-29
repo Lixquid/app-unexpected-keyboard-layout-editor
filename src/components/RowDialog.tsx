@@ -16,6 +16,7 @@ export interface RowDialogProps {
 /** Dialog to edit or delete a row's metadata */
 export function RowDialog(props: RowDialogProps) {
     const [height, setHeight] = useState(props.rowData.height * 100);
+    const [shift, setShift] = useState(props.rowData.shift * 100);
 
     return (
         <>
@@ -61,6 +62,32 @@ export function RowDialog(props: RowDialogProps) {
                                     <span class="input-group-text">%</span>
                                 </div>
                             </div>
+                            <div class="mb-3">
+                                {/* Row Shift Setting */}
+                                <label class="form-label" for="row-shift-input">
+                                    Row Top Padding
+                                </label>
+                                <div class="input-group">
+                                    <input
+                                        id="row-shift-input"
+                                        class="form-control"
+                                        type="number"
+                                        min="0"
+                                        step="1"
+                                        value={shift}
+                                        onInput={(e) =>
+                                            setShift(
+                                                parseInt(
+                                                    (
+                                                        e.target as HTMLInputElement
+                                                    ).value
+                                                )
+                                            )
+                                        }
+                                    />
+                                    <span class="input-group-text">%</span>
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <div class="d-flex justify-content-between w-100">
@@ -82,6 +109,7 @@ export function RowDialog(props: RowDialogProps) {
                                             props.updateRow({
                                                 ...props.rowData,
                                                 height: height / 100,
+                                                shift: shift / 100,
                                             });
                                             props.onClose();
                                         }}

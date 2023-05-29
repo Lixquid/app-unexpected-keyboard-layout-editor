@@ -4,6 +4,7 @@ export const qwerty: KeyboardData = {
     rows: [
         {
             height: 1,
+            shift: 0,
             keys: [
                 {
                     width: 1,
@@ -149,6 +150,7 @@ export const qwerty: KeyboardData = {
         },
         {
             height: 1,
+            shift: 0,
             keys: [
                 {
                     width: 1,
@@ -280,6 +282,7 @@ export const qwerty: KeyboardData = {
         },
         {
             height: 1,
+            shift: 0,
             keys: [
                 {
                     width: 1.5,

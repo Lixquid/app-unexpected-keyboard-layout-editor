@@ -82,7 +82,7 @@ export function App() {
                         ))}
                         {/* Add Row Button */}
                         <button
-                            class="btn btn-outline-success w-100"
+                            class="btn btn-outline-success w-100 mt-3"
                             onClick={() => {
                                 setKeyboard({
                                     ...keyboard,

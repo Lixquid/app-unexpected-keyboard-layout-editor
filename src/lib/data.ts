@@ -33,6 +33,8 @@ export interface KeyData {
 export interface RowData {
     /** Height of the row. Defaults to 1. */
     height: number;
+    /** Amount of padding to add above the row. Defaults to 0. */
+    shift: number;
     /** Keys in the row. */
     keys: KeyData[];
 }
@@ -67,6 +69,7 @@ export function newKey(): KeyData {
 export function newRow(): RowData {
     return {
         height: 1,
+        shift: 0,
         keys: [],
     };
 }
@@ -95,6 +98,7 @@ export interface XmlKeyboard {
         row: {
             $: {
                 height?: string;
+                shift?: string;
             };
             key: {
                 $: {
@@ -137,6 +141,7 @@ export function toXmlKeyboard(data: KeyboardData): XmlKeyboard {
             row: data.rows.map((row) => ({
                 $: {
                     height: row.height !== 1 ? str(row.height) : undefined,
+                    shift: row.shift !== 0 ? str(row.shift) : undefined,
                 },
                 key: row.keys.map((key) => ({
                     $: {
@@ -168,6 +173,10 @@ export function fromXmlKeyboard(xml: XmlKeyboard): KeyboardData {
                 typeof row.$ === "object" && row.$.height
                     ? parseFloat(row.$.height)
                     : 1,
+            shift:
+                typeof row.$ === "object" && row.$.shift
+                    ? parseFloat(row.$.shift)
+                    : 0,
             keys: row.key.map((key) => ({
                 width: key.$.width ? parseFloat(key.$.width) : 1,
                 shift: key.$.shift ? parseFloat(key.$.shift) : 0,
@@ -241,7 +250,9 @@ export function isXmlKeyboard(xml: unknown): xml is XmlKeyboard {
                 typeof row.$ === "object" &&
                 row.$ !== null &&
                 (typeof row.$.height === "undefined" ||
-                    typeof row.$.height === "string")
+                    typeof row.$.height === "string") &&
+                (typeof row.$.shift === "undefined" ||
+                    typeof row.$.shift === "string")
         ) &&
         typeof (xml as XmlKeyboard).keyboard.$ === "object" &&
         (xml as XmlKeyboard).keyboard.$ !== null &&

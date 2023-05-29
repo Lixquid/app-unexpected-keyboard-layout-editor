@@ -18,7 +18,10 @@ export function Row(props: RowProps) {
     const [showEditDialog, setShowEditDialog] = useState(false);
 
     return (
-        <div class="row mb-3">
+        <div
+            class="row"
+            style={{ marginTop: props.rowData.shift * 5 + 0.2 + "rem" }}
+        >
             <div
                 class="col overflow-hidden text-nowrap"
                 style={{ height: props.rowData.height * 5 + "rem" }}
