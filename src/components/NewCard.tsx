@@ -13,6 +13,7 @@ export interface NewCardProps {
 export function NewCard(props: NewCardProps) {
     const [importText, setImportText] = useState("");
     const [error, setError] = useState<string | null>(null);
+    const [selectedTemplate, setSelectedTemplate] = useState("");
 
     return (
         <div class="card mb-5">
@@ -28,10 +29,11 @@ export function NewCard(props: NewCardProps) {
                         <select
                             class="form-select"
                             id="keyboard-template"
+                            value={selectedTemplate}
                             onChange={(e) => {
                                 const template = (e.target as HTMLSelectElement)
                                     .value;
-                                props.setKeyboard(keyboards[template]);
+                                setSelectedTemplate(template);
                             }}
                         >
                             {Object.keys(keyboards).map((key) => (
@@ -40,6 +42,20 @@ export function NewCard(props: NewCardProps) {
                                 </option>
                             ))}
                         </select>
+                        <div class="d-flex justify-content-end align-items-center">
+                            <button
+                                type="button"
+                                class="btn btn-primary mt-2"
+                                onClick={() => {
+                                    props.setKeyboard(
+                                        keyboards[selectedTemplate]
+                                    );
+                                }}
+                                disabled={selectedTemplate.length === 0}
+                            >
+                                Start with {selectedTemplate}
+                            </button>
+                        </div>
                     </div>
                     <div class="col-md-auto d-flex flex-column justify-content-center">
                         <span>or</span>
