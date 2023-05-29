@@ -1,53 +1,201 @@
+import { useState } from "preact/hooks";
+
 /** Props for the KeyInput component */
 export interface KeyInputProps {
     /** The input value */
     input: string;
     /** Callback to update the input value */
     updateInput: (input: string) => void;
-    /** The entry this is an input for */
-    entry:
-        | "key0"
-        | "key1"
-        | "key2"
-        | "key3"
-        | "key4"
-        | "key5"
-        | "key6"
-        | "key7"
-        | "key8";
 }
 
-/** Mapping between key entry and label */
-const keyEntryLabels: Record<KeyInputProps["entry"], string> = {
-    key0: "Center Key",
-    key1: "Top Left Key",
-    key2: "Top Right Key",
-    key3: "Bottom Left Key",
-    key4: "Bottom Right Key",
-    key5: "Left Key",
-    key6: "Right Key",
-    key7: "Top Key",
-    key8: "Bottom Key",
-};
+const specialKeys = [
+    // modifiers: [
+    "shift",
+    "ctrl",
+    "alt",
+    "superscript",
+    "subscript",
+    "ordinal",
+    "arrows",
+    "box",
+    "fn",
+    "meta",
+    // ],
+    // diacritics: [
+    "accent_aigu",
+    "accent_caron",
+    "accent_cedille",
+    "accent_circonflexe",
+    "accent_grave",
+    "accent_macron",
+    "accent_ring",
+    "accent_tilde",
+    "accent_trema",
+    "accent_ogonek",
+    "accent_dot_above",
+    "accent_double_aigu",
+    "accent_slash",
+    "accent_arrow_right",
+    "accent_breve",
+    "accent_bar",
+    "accent_dot_below",
+    "accent_horn",
+    "accent_hook_above",
+    // ],
+    // modes: [
+    "config",
+    "switch_text",
+    "switch_numeric",
+    "switch_emoji",
+    "switch_back_emoji",
+    "switch_second",
+    "switch_second_back",
+    "switch_greekmath",
+    "change_method",
+    "change_method_prev",
+    // ],
+    // common: [
+    "action",
+    "capslock",
+    "esc",
+    "enter",
+    "up",
+    "right",
+    "down",
+    "left",
+    "page_up",
+    "page_down",
+    "home",
+    "end",
+    "backspace",
+    "delete",
+    "insert",
+    "tab",
+    "\\t",
+    "space",
+    "nbsp",
+    // ],
+    // function_keys: [
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f5",
+    "f6",
+    "f7",
+    "f8",
+    "f9",
+    "f10",
+    "f11",
+    "f12",
+    "f11_placeholder",
+    "f12_placeholder",
+    // ],
+    // bidi: [
+    "lrm",
+    "rlm",
+    "b(",
+    "b)",
+    "b[",
+    "b]",
+    "b{",
+    "b}",
+    "blt",
+    "bgt",
+    // ],
+    // hebrew: [
+    "qamats",
+    "patah",
+    "sheva",
+    "dagesh",
+    "hiriq",
+    "segol",
+    "tsere",
+    "holam",
+    "qubuts",
+    "hataf_patah",
+    "hataf_qamats",
+    "hataf_segol",
+    "shindot",
+    "shindot_placeholder",
+    "sindot",
+    "sindot_placeholder",
+    "geresh",
+    "gershayim",
+    "maqaf",
+    "rafe",
+    "ole",
+    "ole_placeholder",
+    "meteg",
+    "meteg_placeholder",
+    // ],
+    // actions: [
+    "copy",
+    "paste",
+    "cut",
+    "selectAll",
+    "shareText",
+    "pasteAsPlainText",
+    "undo",
+    "redo",
+    "replaceText",
+    "textAssist",
+    "autofill",
+    // ],
+];
 
 /** An input for modifying a central or corner key */
 export function KeyInput(props: KeyInputProps) {
+    const [autoComplete, setAutoComplete] = useState<string[]>([]);
+
     return (
-        <div class="mb-3">
-            <label class="form-label" for={`${props.entry}-input`}>
-                {keyEntryLabels[props.entry]}
-            </label>
+        <div class="position-relative">
             <input
-                id={`${props.entry}-input`}
                 class="form-control"
                 type="text"
                 value={props.input ?? ""}
-                onInput={(e) =>
-                    props.updateInput(
-                        (e.target as HTMLInputElement).value.trim()
-                    )
-                }
+                onInput={(e) => {
+                    const value = (e.target as HTMLInputElement).value;
+                    let input = value.trim().toLocaleLowerCase();
+                    // Strip "loc " from the beginning of the input
+                    if (input.startsWith("loc ")) {
+                        input = input.slice(4);
+                    }
+                    if (input.length === 0) {
+                        setAutoComplete([]);
+                    } else {
+                        setAutoComplete(
+                            specialKeys.filter((key) =>
+                                key.startsWith(input.toLowerCase())
+                            )
+                        );
+                    }
+                    props.updateInput(value);
+                }}
             />
+            {autoComplete.length > 0 && (
+                <div
+                    class="position-absolute w-100 top-100 list-group"
+                    style={{ zIndex: 1 }}
+                >
+                    {autoComplete.map((key, i) => (
+                        <button
+                            class="list-group-item list-group-item-action"
+                            onClick={() => {
+                                props.updateInput(
+                                    (props.input.startsWith("loc ")
+                                        ? "loc "
+                                        : "") + key
+                                );
+                                setAutoComplete([]);
+                            }}
+                            key={i}
+                        >
+                            {key}
+                        </button>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }

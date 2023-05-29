@@ -1,5 +1,6 @@
 import { useState } from "preact/hooks";
 import { KeyData } from "../lib/data";
+import { KeyInput } from "./KeyInput";
 import { KeyLegend } from "./KeyLegend";
 
 /** Props for the KeyDialog component */
@@ -239,10 +240,8 @@ export function KeyDialog(props: KeyDialogProps) {
                             </div>
 
                             <div class="mb-3">
-                                <input
-                                    class="form-control"
-                                    type="text"
-                                    value={
+                                <KeyInput
+                                    input={
                                         selectedRegion === "key0"
                                             ? key0
                                             : selectedRegion === "key1"
@@ -263,10 +262,7 @@ export function KeyDialog(props: KeyDialogProps) {
                                             ? key8
                                             : ""
                                     }
-                                    onInput={(e) => {
-                                        const value = (
-                                            e.target as HTMLInputElement
-                                        ).value;
+                                    updateInput={(value) => {
                                         switch (selectedRegion) {
                                             case "key0":
                                                 setKey0(value);
