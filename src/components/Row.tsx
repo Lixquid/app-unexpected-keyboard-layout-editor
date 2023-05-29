@@ -1,5 +1,5 @@
 import { useState } from "preact/hooks";
-import { RowData, canAddKeyToRow, newKey } from "../lib/data";
+import { KeyboardData, RowData, newKey } from "../lib/data";
 import { Key } from "./Key";
 import { RowDialog } from "./RowDialog";
 
@@ -11,6 +11,8 @@ export interface RowProps {
     updateRow: (row: RowData) => void;
     /** Callback to delete the row */
     deleteRow: () => void;
+    /** The entire keyboard data */
+    keyboardData: KeyboardData;
 }
 
 /** A single row on the keyboard that supports editing */
@@ -45,6 +47,7 @@ export function Row(props: RowProps) {
                                 ),
                             })
                         }
+                        keyboardData={props.keyboardData}
                     />
                 ))}
             </div>
@@ -59,7 +62,6 @@ export function Row(props: RowProps) {
                         })
                     }
                     title="Add Key"
-                    disabled={!canAddKeyToRow(props.rowData)}
                 >
                     <i class="bi bi-plus-lg" />
                 </button>

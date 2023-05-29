@@ -1,3 +1,4 @@
+//#region Data Structures
 /** Data structure for a single key. */
 export interface KeyData {
     /** Width of the key. Rows have a total width of 10. Defaults to 1. */
@@ -45,8 +46,12 @@ export interface KeyboardData {
     rows: RowData[];
     /** If the default bottom row should be added. */
     bottomRow: boolean;
+    /** A width that overrides each row's width. */
+    width?: number;
 }
+//#endregion
 
+//#region Constructors
 /** Create a default {@link KeyData}. */
 export function newKey(): KeyData {
     return {
@@ -81,19 +86,29 @@ export function newKeyboard(): KeyboardData {
         bottomRow: true,
     };
 }
+//#endregion
 
-/** Returns if a row supports adding a key (if it is not full). */
-export function canAddKeyToRow(row: RowData): boolean {
-    return (
-        row.keys.reduce((sum, key) => sum + key.width + key.shift, 0) < 9.999
+//#region Utility Functions
+/** Returns the width for a keyboard. */
+export function getKeyboardWidth(data: KeyboardData): number {
+    // If a width is specified, use that.
+    if (data.width !== undefined) return data.width;
+    // Otherwise, find the widest row.
+    return Math.max(
+        ...data.rows.map((row) =>
+            row.keys.reduce((sum, key) => sum + key.width + key.shift, 0)
+        )
     );
 }
+//#endregion
 
+//#region Serialization
 /** A xml2js target keyboard data structure. */
 export interface XmlKeyboard {
     keyboard: {
         $: {
             bottomRow?: string;
+            width?: string;
         };
         row: {
             $: {
@@ -137,6 +152,7 @@ export function toXmlKeyboard(data: KeyboardData): XmlKeyboard {
         keyboard: {
             $: {
                 bottomRow: data.bottomRow ? undefined : "false",
+                width: data.width ? str(data.width) : undefined,
             },
             row: data.rows.map((row) => ({
                 $: {
@@ -167,19 +183,20 @@ export function toXmlKeyboard(data: KeyboardData): XmlKeyboard {
 
 /** Convert a {@link XmlKeyboard} to a {@link KeyboardData}. */
 export function fromXmlKeyboard(xml: XmlKeyboard): KeyboardData {
+    function num(value: string | undefined): number | undefined {
+        if (value === undefined) return undefined;
+        const v = parseFloat(value);
+        if (isNaN(v)) return undefined;
+        return v;
+    }
+
     return {
         rows: xml.keyboard.row.map((row) => ({
-            height:
-                typeof row.$ === "object" && row.$.height
-                    ? parseFloat(row.$.height)
-                    : 1,
-            shift:
-                typeof row.$ === "object" && row.$.shift
-                    ? parseFloat(row.$.shift)
-                    : 0,
+            height: (typeof row.$ === "object" && num(row.$.height)) || 1,
+            shift: (typeof row.$ === "object" && num(row.$.shift)) || 0,
             keys: row.key.map((key) => ({
-                width: key.$.width ? parseFloat(key.$.width) : 1,
-                shift: key.$.shift ? parseFloat(key.$.shift) : 0,
+                width: num(key.$.width) || 1,
+                shift: num(key.$.shift) || 0,
                 key0: key.$.key0,
                 key1: key.$.key1 || "",
                 key2: key.$.key2 || "",
@@ -197,6 +214,9 @@ export function fromXmlKeyboard(xml: XmlKeyboard): KeyboardData {
             xml.keyboard.$.bottomRow === "false"
                 ? false
                 : true,
+        width:
+            (typeof xml.keyboard.$ === "object" && num(xml.keyboard.$.width)) ||
+            undefined,
     };
 }
 
@@ -257,6 +277,9 @@ export function isXmlKeyboard(xml: unknown): xml is XmlKeyboard {
         typeof (xml as XmlKeyboard).keyboard.$ === "object" &&
         (xml as XmlKeyboard).keyboard.$ !== null &&
         (typeof (xml as XmlKeyboard).keyboard.$.bottomRow === "undefined" ||
-            typeof (xml as XmlKeyboard).keyboard.$.bottomRow === "string")
+            typeof (xml as XmlKeyboard).keyboard.$.bottomRow === "string") &&
+        (typeof (xml as XmlKeyboard).keyboard.$.width === "undefined" ||
+            typeof (xml as XmlKeyboard).keyboard.$.width === "string")
     );
 }
+//#endregion

@@ -14,6 +14,7 @@ export interface KeyboardDialogProps {
 /** A dialog for editing the keyboard metadata */
 export function KeyboardDialog(props: KeyboardDialogProps) {
     const [hasBottomRow, setHasBottomRow] = useState(props.keyboard.bottomRow);
+    const [width, setWidth] = useState(props.keyboard.width);
 
     return (
         <>
@@ -60,6 +61,60 @@ export function KeyboardDialog(props: KeyboardDialogProps) {
                                     </div>
                                 </div>
                             </div>
+                            <div class="mb-3">
+                                {/* Keyboard Width Setting */}
+                                <div class="form-check form-switch">
+                                    <input
+                                        id="keyboard-widthEnabled-input"
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        checked={width !== undefined}
+                                        onChange={(e) =>
+                                            setWidth(
+                                                (e.target as HTMLInputElement)
+                                                    .checked
+                                                    ? 10
+                                                    : undefined
+                                            )
+                                        }
+                                    />
+                                    <label
+                                        class="form-check-label"
+                                        for="keyboard-widthEnabled-input"
+                                    >
+                                        Override keyboard width
+                                    </label>
+                                    <div class="form-text">
+                                        If enabled, the keyboard width will be
+                                        set to the value below. If disabled, the
+                                        keyboard width will be calculated based
+                                        on the width of the widest row.
+                                        <div class="input-group">
+                                            <input
+                                                id="keyboard-width-input"
+                                                class="form-control"
+                                                type="number"
+                                                min="10"
+                                                step="1"
+                                                value={width}
+                                                onInput={(e) =>
+                                                    setWidth(
+                                                        parseInt(
+                                                            (
+                                                                e.target as HTMLInputElement
+                                                            ).value
+                                                        )
+                                                    )
+                                                }
+                                                disabled={width === undefined}
+                                            />
+                                            <span class="input-group-text">
+                                                keys
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button
@@ -69,6 +124,7 @@ export function KeyboardDialog(props: KeyboardDialogProps) {
                                     props.setKeyboard({
                                         ...props.keyboard,
                                         bottomRow: hasBottomRow,
+                                        width,
                                     });
                                     props.onClose();
                                 }}

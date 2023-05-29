@@ -1,5 +1,5 @@
-import { useState } from "preact/hooks";
-import { KeyData } from "../lib/data";
+import { useMemo, useState } from "preact/hooks";
+import { KeyData, KeyboardData, getKeyboardWidth } from "../lib/data";
 import { KeyDialog } from "./KeyDialog";
 import { KeyLegend } from "./KeyLegend";
 
@@ -11,11 +11,18 @@ export interface KeyProps {
     updateKey: (key: KeyData) => void;
     /** Callback to delete the key */
     deleteKey: () => void;
+    /** The entire keyboard data */
+    keyboardData: KeyboardData;
 }
 
 /** A single key on the keyboard that supports editing */
 export function Key(props: KeyProps) {
     const [dialogOpen, setDialogOpen] = useState(false);
+
+    const keyboardWidth = useMemo(
+        () => getKeyboardWidth(props.keyboardData),
+        [props.keyboardData]
+    );
 
     return (
         <>
@@ -23,8 +30,9 @@ export function Key(props: KeyProps) {
                 class="btn btn-secondary position-relative h-100"
                 onClick={() => setDialogOpen(true)}
                 style={{
-                    width: props.keyData.width * 10 + "%",
-                    marginLeft: props.keyData.shift * 10 + "%",
+                    width: (props.keyData.width / keyboardWidth) * 100 + "%",
+                    marginLeft:
+                        (props.keyData.shift / keyboardWidth) * 100 + "%",
                 }}
             >
                 <KeyLegend legend={props.keyData.key0} />

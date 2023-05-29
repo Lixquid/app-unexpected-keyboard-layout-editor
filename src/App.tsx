@@ -78,6 +78,7 @@ export function App() {
                                     })
                                 }
                                 key={i}
+                                keyboardData={keyboard}
                             />
                         ))}
                         {/* Add Row Button */}
