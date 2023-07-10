@@ -62,7 +62,7 @@ export function NewCard(props: NewCardProps) {
                     </div>
                     <div class="col-md mb-3">
                         <label class="form-label" for="keyboard-import">
-                        ... <a href="https://github.com/Julow/Unexpected-Keyboard/tree/master/res/xml">... an XML import</a>
+                        <a href="https://github.com/Julow/Unexpected-Keyboard/tree/master/res/xml">... an XML import</a>
                         </label>
                         <textarea
                             class={`form-control ${
