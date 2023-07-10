@@ -18,13 +18,13 @@ export function NewCard(props: NewCardProps) {
     return (
         <div class="card mb-5">
             <div class="card-header">
-                <h4 class="card-title mb-0">New keyboard</h4>
+                <h4 class="card-title mb-0">Start from ...</h4>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md mb-3">
                         <label class="form-label" for="keyboard-template">
-                            Start from a template
+                            ... a template
                         </label>
                         <select
                             class="form-select"
@@ -58,11 +58,11 @@ export function NewCard(props: NewCardProps) {
                         </div>
                     </div>
                     <div class="col-md-auto d-flex flex-column justify-content-center">
-                        <span>or</span>
+                        <span> </span>
                     </div>
                     <div class="col-md mb-3">
                         <label class="form-label" for="keyboard-import">
-                            Import from XML
+                        ... <a href="https://github.com/Julow/Unexpected-Keyboard/tree/master/res/xml">... an XML import</a>
                         </label>
                         <textarea
                             class={`form-control ${
