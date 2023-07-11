@@ -1,8 +1,8 @@
-# [Unexpected Keyboard Layout Creator](https://unexpected-keyboard-layout-creator.lixquid.com)
+# [Unexpected Keyboard Layout Editor](https://unexpected-keyboard-layout-editor.lixquid.com)
 
-A tool for creating layouts for the Unexpected Keyboard for Android devices.
+A tool for creating and editing layouts for the Unexpected Keyboard for Android devices.
 
-https://unexpected-keyboard-layout-creator.lixquid.com
+https://unexpected-keyboard-layout-editor.lixquid.com
 
 ## How to Use
 
