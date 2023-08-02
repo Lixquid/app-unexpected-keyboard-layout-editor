@@ -10,8 +10,9 @@ import { qwerty } from "./lib/keyboards";
 function toggleDarkMode() {
     const html = document.querySelector("html");
     if (html !== null) {
-        html.dataset.bsTheme =
-            html.dataset.bsTheme === "dark" ? "light" : "dark";
+        html.dataset.bsTheme = html.dataset.bsTheme === "dark"
+            ? "light"
+            : "dark";
     }
 }
 
@@ -43,6 +44,20 @@ export function App() {
                         </a>
                     </div>
                 </div>
+                <p class="lead mb-5">
+                    A layout editor for the{" "}
+                    <a href="https://github.com/Julow/Unexpected-Keyboard">
+                        Unexpected Keyboard
+                    </a>{" "}
+                    for Android devices. Get it on{" "}
+                    <a href="https://play.google.com/store/apps/details?id=juloo.keyboard2">
+                        Google Play
+                    </a>{" "}
+                    or{" "}
+                    <a href="https://f-droid.org/packages/juloo.keyboard2/">
+                        F-Droid
+                    </a>.
+                </p>
                 <NewCard setKeyboard={setKeyboard} />
                 <div class="card" style={{ minWidth: "50rem" }}>
                     <div class="card-header">
@@ -67,16 +82,14 @@ export function App() {
                                         rows: keyboard.rows.map((r, j) =>
                                             j === i ? row : r
                                         ),
-                                    })
-                                }
+                                    })}
                                 deleteRow={() =>
                                     setKeyboard({
                                         ...keyboard,
                                         rows: keyboard.rows.filter(
-                                            (_, j) => j !== i
+                                            (_, j) => j !== i,
                                         ),
-                                    })
-                                }
+                                    })}
                                 key={i}
                                 keyboardData={keyboard}
                             />
