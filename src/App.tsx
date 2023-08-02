@@ -99,8 +99,8 @@ export function App() {
                 <ExportCard keyboard={keyboard} />
                 <div class="mt-5 text-end">
                     <a href="https://github.com/lixquid/app-unexpected-keyboard-layout-editor">
-                        <i class="bi bi-box-arrow-up-right me-2" />
-                        Source code
+                        <i class="bi bi-github me-2" />
+                        GitHub
                     </a>
                 </div>
             </div>
