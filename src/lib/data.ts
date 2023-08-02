@@ -119,7 +119,7 @@ export interface XmlKeyboard {
                 $: {
                     width?: string;
                     shift?: string;
-                    key0: string;
+                    key0?: string;
                     key1?: string;
                     key2?: string;
                     key3?: string;
@@ -165,7 +165,7 @@ export function toXmlKeyboard(data: KeyboardData): XmlKeyboard {
                         shift: key.shift !== 0 ? str(key.shift) : undefined,
                         slider: key.slider ? "true" : undefined,
 
-                        key0: str(key.key0),
+                        key0: key.key0 !== "" ? str(key.key0) : undefined,
                         key1: key.key1 !== "" ? str(key.key1) : undefined,
                         key2: key.key2 !== "" ? str(key.key2) : undefined,
                         key3: key.key3 !== "" ? str(key.key3) : undefined,
@@ -197,7 +197,7 @@ export function fromXmlKeyboard(xml: XmlKeyboard): KeyboardData {
             keys: row.key.map((key) => ({
                 width: num(key.$.width) || 1,
                 shift: num(key.$.shift) || 0,
-                key0: key.$.key0,
+                key0: key.$.key0 || "",
                 key1: key.$.key1 || "",
                 key2: key.$.key2 || "",
                 key3: key.$.key3 || "",
@@ -243,11 +243,12 @@ export function isXmlKeyboard(xml: unknown): xml is XmlKeyboard {
                         key !== null &&
                         typeof key.$ === "object" &&
                         key.$ !== null &&
-                        typeof key.$.key0 === "string" &&
                         (typeof key.$.width === "undefined" ||
                             typeof key.$.width === "string") &&
                         (typeof key.$.shift === "undefined" ||
                             typeof key.$.shift === "string") &&
+                        (typeof key.$.key0 === "undefined" ||
+                            typeof key.$.key0 === "string") &&
                         (typeof key.$.key1 === "undefined" ||
                             typeof key.$.key1 === "string") &&
                         (typeof key.$.key2 === "undefined" ||
