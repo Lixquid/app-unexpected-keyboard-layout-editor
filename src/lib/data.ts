@@ -183,6 +183,17 @@ export function toXmlKeyboard(data: KeyboardData): XmlKeyboard {
 
 /** Convert a {@link XmlKeyboard} to a {@link KeyboardData}. */
 export function fromXmlKeyboard(xml: XmlKeyboard): KeyboardData {
+    function str(value: string | undefined): string {
+        if (value === undefined) return "";
+        if (
+            value.length === 2 &&
+            value[0] === "\\" &&
+            androidEscapeChars.test(value[1])
+        ) {
+            return value[1];
+        }
+        return value;
+    }
     function num(value: string | undefined): number | undefined {
         if (value === undefined) return undefined;
         const v = parseFloat(value);
@@ -197,15 +208,15 @@ export function fromXmlKeyboard(xml: XmlKeyboard): KeyboardData {
             keys: row.key.map((key) => ({
                 width: num(key.$.width) || 1,
                 shift: num(key.$.shift) || 0,
-                key0: key.$.key0 || "",
-                key1: key.$.key1 || "",
-                key2: key.$.key2 || "",
-                key3: key.$.key3 || "",
-                key4: key.$.key4 || "",
-                key5: key.$.key5 || "",
-                key6: key.$.key6 || "",
-                key7: key.$.key7 || "",
-                key8: key.$.key8 || "",
+                key0: str(key.$.key0),
+                key1: str(key.$.key1),
+                key2: str(key.$.key2),
+                key3: str(key.$.key3),
+                key4: str(key.$.key4),
+                key5: str(key.$.key5),
+                key6: str(key.$.key6),
+                key7: str(key.$.key7),
+                key8: str(key.$.key8),
                 slider: key.$.slider === "true",
             })),
         })),
