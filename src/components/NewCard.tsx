@@ -61,9 +61,17 @@ export function NewCard(props: NewCardProps) {
                         <span>or</span>
                     </div>
                     <div class="col-md mb-3">
-                        <label class="form-label" for="keyboard-import">
-                            Import from XML
-                        </label>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label class="form-label" for="keyboard-import">
+                                Import from XML
+                            </label>
+                            <a
+                                href="https://github.com/Julow/Unexpected-Keyboard/tree/master/res/xml"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="form-label"
+                            >Examples</a>
+                        </div>
                         <textarea
                             class={`form-control ${
                                 error !== null ? "is-invalid" : ""
