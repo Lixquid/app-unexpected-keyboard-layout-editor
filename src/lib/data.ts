@@ -231,67 +231,131 @@ export function fromXmlKeyboard(xml: XmlKeyboard): KeyboardData {
     };
 }
 
-/** Checks if an unknown object is a {@link XmlKeyboard}. */
-export function isXmlKeyboard(xml: unknown): xml is XmlKeyboard {
-    return (
-        typeof xml === "object" &&
-        xml !== null &&
-        typeof (xml as XmlKeyboard).keyboard === "object" &&
-        (xml as XmlKeyboard).keyboard !== null &&
-        typeof (xml as XmlKeyboard).keyboard.row === "object" &&
-        (xml as XmlKeyboard).keyboard.row !== null &&
-        Array.isArray((xml as XmlKeyboard).keyboard.row) &&
-        (xml as XmlKeyboard).keyboard.row.every(
-            (row) =>
-                typeof row === "object" &&
-                row !== null &&
-                typeof row.key === "object" &&
-                row.key !== null &&
-                Array.isArray(row.key) &&
-                row.key.every(
-                    (key) =>
-                        typeof key === "object" &&
-                        key !== null &&
-                        typeof key.$ === "object" &&
-                        key.$ !== null &&
-                        (typeof key.$.width === "undefined" ||
-                            typeof key.$.width === "string") &&
-                        (typeof key.$.shift === "undefined" ||
-                            typeof key.$.shift === "string") &&
-                        (typeof key.$.key0 === "undefined" ||
-                            typeof key.$.key0 === "string") &&
-                        (typeof key.$.key1 === "undefined" ||
-                            typeof key.$.key1 === "string") &&
-                        (typeof key.$.key2 === "undefined" ||
-                            typeof key.$.key2 === "string") &&
-                        (typeof key.$.key3 === "undefined" ||
-                            typeof key.$.key3 === "string") &&
-                        (typeof key.$.key4 === "undefined" ||
-                            typeof key.$.key4 === "string") &&
-                        (typeof key.$.key5 === "undefined" ||
-                            typeof key.$.key5 === "string") &&
-                        (typeof key.$.key6 === "undefined" ||
-                            typeof key.$.key6 === "string") &&
-                        (typeof key.$.key7 === "undefined" ||
-                            typeof key.$.key7 === "string") &&
-                        (typeof key.$.key8 === "undefined" ||
-                            typeof key.$.key8 === "string") &&
-                        (typeof key.$.slider === "undefined" ||
-                            typeof key.$.slider === "string")
-                ) &&
-                typeof row.$ === "object" &&
-                row.$ !== null &&
-                (typeof row.$.height === "undefined" ||
-                    typeof row.$.height === "string") &&
-                (typeof row.$.shift === "undefined" ||
-                    typeof row.$.shift === "string")
-        ) &&
-        typeof (xml as XmlKeyboard).keyboard.$ === "object" &&
-        (xml as XmlKeyboard).keyboard.$ !== null &&
-        (typeof (xml as XmlKeyboard).keyboard.$.bottomRow === "undefined" ||
-            typeof (xml as XmlKeyboard).keyboard.$.bottomRow === "string") &&
-        (typeof (xml as XmlKeyboard).keyboard.$.width === "undefined" ||
-            typeof (xml as XmlKeyboard).keyboard.$.width === "string")
-    );
+/** Returns `undefined` if an object is an {@link XmlKeyboard}, otherwise an error message. */
+export function isXmlKeyboard(xml: unknown): string | undefined {
+    function isArray(obj: unknown): obj is unknown[] {
+        return Array.isArray(obj);
+    }
+
+    if (typeof xml !== "object" || xml === null) {
+        return "Not an xml object";
+    }
+
+    if (
+        !("keyboard" in xml) ||
+        xml.keyboard === null ||
+        typeof xml.keyboard !== "object"
+    ) {
+        return "Top level element is not a keyboard";
+    }
+
+    if ("$" in xml.keyboard) {
+        if (xml.keyboard.$ === null || typeof xml.keyboard.$ !== "object") {
+            return "Keyboard attributes are not an object";
+        }
+
+        if (
+            "bottomRow" in xml.keyboard.$ &&
+            typeof xml.keyboard.$.bottomRow !== "string"
+        ) {
+            return "Keyboard bottomRow attribute is not a string";
+        }
+
+        if (
+            "width" in xml.keyboard.$ &&
+            typeof xml.keyboard.$.width !== "string"
+        ) {
+            return "Keyboard width attribute is not a string";
+        }
+    }
+
+    if (!("row" in xml.keyboard) || !isArray(xml.keyboard.row)) {
+        return "Keyboard is missing rows";
+    }
+
+    for (const row of xml.keyboard.row) {
+        if (typeof row !== "object" || row === null) {
+            return "Row is not an object";
+        }
+
+        if ("$" in row) {
+            if (row.$ === null || typeof row.$ !== "object") {
+                return "Row is missing attributes";
+            }
+
+            if ("height" in row.$ && typeof row.$.height !== "string") {
+                return "Row height attribute is not a string";
+            }
+
+            if ("shift" in row.$ && typeof row.$.shift !== "string") {
+                return "Row shift attribute is not a string";
+            }
+        }
+
+        if (!("key" in row) || !isArray(row.key)) {
+            return "Row is missing keys";
+        }
+
+        for (const key of row.key) {
+            if (typeof key !== "object" || key === null) {
+                return "Key is not an object";
+            }
+
+            if (!("$" in key) || key.$ === null || typeof key.$ !== "object") {
+                return "Key is missing attributes";
+            }
+
+            if ("width" in key.$ && typeof key.$.width !== "string") {
+                return "Key width attribute is not a string";
+            }
+
+            if ("shift" in key.$ && typeof key.$.shift !== "string") {
+                return "Key shift attribute is not a string";
+            }
+
+            if ("slider" in key.$ && typeof key.$.slider !== "string") {
+                return "Key slider attribute is not a string";
+            }
+
+            if ("key0" in key.$ && typeof key.$.key0 !== "string") {
+                return "Key key0 attribute is not a string";
+            }
+
+            if ("key1" in key.$ && typeof key.$.key1 !== "string") {
+                return "Key key1 attribute is not a string";
+            }
+
+            if ("key2" in key.$ && typeof key.$.key2 !== "string") {
+                return "Key key2 attribute is not a string";
+            }
+
+            if ("key3" in key.$ && typeof key.$.key3 !== "string") {
+                return "Key key3 attribute is not a string";
+            }
+
+            if ("key4" in key.$ && typeof key.$.key4 !== "string") {
+                return "Key key4 attribute is not a string";
+            }
+
+            if ("key5" in key.$ && typeof key.$.key5 !== "string") {
+                return "Key key5 attribute is not a string";
+            }
+
+            if ("key6" in key.$ && typeof key.$.key6 !== "string") {
+                return "Key key6 attribute is not a string";
+            }
+
+            if ("key7" in key.$ && typeof key.$.key7 !== "string") {
+                return "Key key7 attribute is not a string";
+            }
+
+            if ("key8" in key.$ && typeof key.$.key8 !== "string") {
+                return "Key key8 attribute is not a string";
+            }
+        }
+    }
+
+    return undefined;
 }
+
 //#endregion

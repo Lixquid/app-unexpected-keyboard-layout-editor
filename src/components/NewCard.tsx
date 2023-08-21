@@ -1,6 +1,11 @@
 import { useState } from "preact/hooks";
 import * as xml2js from "xml2js";
-import { KeyboardData, fromXmlKeyboard, isXmlKeyboard } from "../lib/data";
+import {
+    fromXmlKeyboard,
+    isXmlKeyboard,
+    KeyboardData,
+    XmlKeyboard,
+} from "../lib/data";
 import { keyboards } from "../lib/keyboards";
 
 /** Props for the NewCard component */
@@ -48,7 +53,7 @@ export function NewCard(props: NewCardProps) {
                                 class="btn btn-primary mt-2"
                                 onClick={() => {
                                     props.setKeyboard(
-                                        keyboards[selectedTemplate]
+                                        keyboards[selectedTemplate],
                                     );
                                 }}
                                 disabled={selectedTemplate.length === 0}
@@ -70,7 +75,9 @@ export function NewCard(props: NewCardProps) {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 class="form-label"
-                            >Examples</a>
+                            >
+                                Examples
+                            </a>
                         </div>
                         <textarea
                             class={`form-control ${
@@ -80,7 +87,7 @@ export function NewCard(props: NewCardProps) {
                             rows={3}
                             onChange={(e) => {
                                 setImportText(
-                                    (e.target as HTMLTextAreaElement).value
+                                    (e.target as HTMLTextAreaElement).value,
                                 );
                             }}
                         />
@@ -89,17 +96,21 @@ export function NewCard(props: NewCardProps) {
                                 class="btn btn-primary mt-2"
                                 onClick={async () => {
                                     try {
-                                        const result =
-                                            await xml2js.parseStringPromise(
-                                                importText
-                                            );
+                                        const result = await xml2js
+                                            .parseStringPromise(
+                                                importText,
+                                            ) as unknown;
                                         console.log("Parsed XML: ", result);
-                                        if (!isXmlKeyboard(result)) {
+                                        const xmlError = isXmlKeyboard(result);
+                                        if (xmlError) {
                                             throw new Error(
-                                                "Not an Unexpected Keyboard XML file"
+                                                "Not an Unexpected Keyboard XML file: " +
+                                                    xmlError,
                                             );
                                         }
-                                        const k = fromXmlKeyboard(result);
+                                        const k = fromXmlKeyboard(
+                                            result as XmlKeyboard,
+                                        );
                                         console.log("Parsed Keyboard: ", k);
                                         props.setKeyboard(k);
                                         setError(null);
@@ -107,7 +118,7 @@ export function NewCard(props: NewCardProps) {
                                         console.error(e);
                                         setError(
                                             "Error parsing XML: " +
-                                                (e as Error).message
+                                                (e as Error).message,
                                         );
                                     }
                                 }}
