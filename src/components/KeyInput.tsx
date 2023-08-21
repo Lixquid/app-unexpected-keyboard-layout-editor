@@ -48,8 +48,8 @@ const specialKeys = [
     "switch_numeric",
     "switch_emoji",
     "switch_back_emoji",
-    "switch_second",
-    "switch_second_back",
+    "switch_forward",
+    "switch_backward",
     "switch_greekmath",
     "change_method",
     "change_method_prev",
@@ -167,7 +167,7 @@ export function KeyInput(props: KeyInputProps) {
                         setAutoComplete(
                             specialKeys.filter((key) =>
                                 key.startsWith(input.toLowerCase())
-                            )
+                            ),
                         );
                     }
                     props.updateInput(value);
@@ -185,7 +185,7 @@ export function KeyInput(props: KeyInputProps) {
                                 props.updateInput(
                                     (props.input.startsWith("loc ")
                                         ? "loc "
-                                        : "") + key
+                                        : "") + key,
                                 );
                                 setAutoComplete([]);
                             }}
