@@ -14,7 +14,7 @@ export interface KeyLegendProps {
 const legendIcons: Record<KeyLegendProps["legend"], string> = {
     shift: "shift-fill",
     capslock: "capslock-fill",
-    enter: "arrow-right-circle-fill",
+    enter: "arrow-return-left",
     up: "arrow-up",
     down: "arrow-down",
     left: "arrow-left",
