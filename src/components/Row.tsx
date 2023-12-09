@@ -35,7 +35,7 @@ export function Row(props: RowProps) {
                             props.updateRow({
                                 ...props.rowData,
                                 keys: props.rowData.keys.map((k, l) =>
-                                    l === j ? key : k
+                                    l === j ? key : k,
                                 ),
                             })
                         }
@@ -43,7 +43,7 @@ export function Row(props: RowProps) {
                             props.updateRow({
                                 ...props.rowData,
                                 keys: props.rowData.keys.filter(
-                                    (_, k) => k !== j
+                                    (_, k) => k !== j,
                                 ),
                             })
                         }

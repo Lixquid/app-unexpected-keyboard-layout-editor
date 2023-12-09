@@ -21,7 +21,7 @@ export function Key(props: KeyProps) {
 
     const keyboardWidth = useMemo(
         () => getKeyboardWidth(props.keyboardData),
-        [props.keyboardData]
+        [props.keyboardData],
     );
 
     return (

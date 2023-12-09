@@ -96,8 +96,8 @@ export function getKeyboardWidth(data: KeyboardData): number {
     // Otherwise, find the widest row.
     return Math.max(
         ...data.rows.map((row) =>
-            row.keys.reduce((sum, key) => sum + key.width + key.shift, 0)
-        )
+            row.keys.reduce((sum, key) => sum + key.width + key.shift, 0),
+        ),
     );
 }
 //#endregion

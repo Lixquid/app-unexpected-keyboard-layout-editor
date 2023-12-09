@@ -42,7 +42,7 @@ export function KeyboardDialog(props: KeyboardDialogProps) {
                                         onChange={(e) =>
                                             setHasBottomRow(
                                                 (e.target as HTMLInputElement)
-                                                    .checked
+                                                    .checked,
                                             )
                                         }
                                     />
@@ -74,7 +74,7 @@ export function KeyboardDialog(props: KeyboardDialogProps) {
                                                 (e.target as HTMLInputElement)
                                                     .checked
                                                     ? 10
-                                                    : undefined
+                                                    : undefined,
                                             )
                                         }
                                     />
@@ -102,8 +102,8 @@ export function KeyboardDialog(props: KeyboardDialogProps) {
                                                         parseInt(
                                                             (
                                                                 e.target as HTMLInputElement
-                                                            ).value
-                                                        )
+                                                            ).value,
+                                                        ),
                                                     )
                                                 }
                                                 disabled={width === undefined}

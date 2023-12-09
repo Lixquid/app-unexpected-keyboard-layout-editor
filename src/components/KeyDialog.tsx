@@ -245,22 +245,25 @@ export function KeyDialog(props: KeyDialogProps) {
                                         selectedRegion === "key0"
                                             ? key0
                                             : selectedRegion === "key1"
-                                            ? key1
-                                            : selectedRegion === "key2"
-                                            ? key2
-                                            : selectedRegion === "key3"
-                                            ? key3
-                                            : selectedRegion === "key4"
-                                            ? key4
-                                            : selectedRegion === "key5"
-                                            ? key5
-                                            : selectedRegion === "key6"
-                                            ? key6
-                                            : selectedRegion === "key7"
-                                            ? key7
-                                            : selectedRegion === "key8"
-                                            ? key8
-                                            : ""
+                                              ? key1
+                                              : selectedRegion === "key2"
+                                                ? key2
+                                                : selectedRegion === "key3"
+                                                  ? key3
+                                                  : selectedRegion === "key4"
+                                                    ? key4
+                                                    : selectedRegion === "key5"
+                                                      ? key5
+                                                      : selectedRegion ===
+                                                          "key6"
+                                                        ? key6
+                                                        : selectedRegion ===
+                                                            "key7"
+                                                          ? key7
+                                                          : selectedRegion ===
+                                                              "key8"
+                                                            ? key8
+                                                            : ""
                                     }
                                     updateInput={(value) => {
                                         switch (selectedRegion) {
@@ -326,8 +329,8 @@ export function KeyDialog(props: KeyDialogProps) {
                                                         parseInt(
                                                             (
                                                                 e.target as HTMLInputElement
-                                                            ).value
-                                                        )
+                                                            ).value,
+                                                        ),
                                                     )
                                                 }
                                             />
@@ -357,8 +360,8 @@ export function KeyDialog(props: KeyDialogProps) {
                                                         parseInt(
                                                             (
                                                                 e.target as HTMLInputElement
-                                                            ).value
-                                                        )
+                                                            ).value,
+                                                        ),
                                                     )
                                                 }
                                             />
@@ -378,7 +381,7 @@ export function KeyDialog(props: KeyDialogProps) {
                                                     setSlider(
                                                         (
                                                             e.target as HTMLInputElement
-                                                        ).checked
+                                                        ).checked,
                                                     )
                                                 }
                                             />

@@ -54,8 +54,8 @@ export function RowDialog(props: RowDialogProps) {
                                                 parseInt(
                                                     (
                                                         e.target as HTMLInputElement
-                                                    ).value
-                                                )
+                                                    ).value,
+                                                ),
                                             )
                                         }
                                     />
@@ -80,8 +80,8 @@ export function RowDialog(props: RowDialogProps) {
                                                 parseInt(
                                                     (
                                                         e.target as HTMLInputElement
-                                                    ).value
-                                                )
+                                                    ).value,
+                                                ),
                                             )
                                         }
                                     />

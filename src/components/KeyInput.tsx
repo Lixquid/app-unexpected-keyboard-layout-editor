@@ -166,7 +166,7 @@ export function KeyInput(props: KeyInputProps) {
                     } else {
                         setAutoComplete(
                             specialKeys.filter((key) =>
-                                key.startsWith(input.toLowerCase())
+                                key.startsWith(input.toLowerCase()),
                             ),
                         );
                     }

@@ -10,9 +10,8 @@ import { qwerty } from "./lib/keyboards";
 function toggleDarkMode() {
     const html = document.querySelector("html");
     if (html !== null) {
-        html.dataset.bsTheme = html.dataset.bsTheme === "dark"
-            ? "light"
-            : "dark";
+        html.dataset.bsTheme =
+            html.dataset.bsTheme === "dark" ? "light" : "dark";
     }
 }
 
@@ -56,7 +55,8 @@ export function App() {
                     or{" "}
                     <a href="https://f-droid.org/packages/juloo.keyboard2/">
                         F-Droid
-                    </a>.
+                    </a>
+                    .
                 </p>
                 <NewCard setKeyboard={setKeyboard} />
                 <div class="card" style={{ minWidth: "50rem" }}>
@@ -80,16 +80,18 @@ export function App() {
                                     setKeyboard({
                                         ...keyboard,
                                         rows: keyboard.rows.map((r, j) =>
-                                            j === i ? row : r
+                                            j === i ? row : r,
                                         ),
-                                    })}
+                                    })
+                                }
                                 deleteRow={() =>
                                     setKeyboard({
                                         ...keyboard,
                                         rows: keyboard.rows.filter(
                                             (_, j) => j !== i,
                                         ),
-                                    })}
+                                    })
+                                }
                                 key={i}
                                 keyboardData={keyboard}
                             />

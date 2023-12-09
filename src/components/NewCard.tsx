@@ -96,10 +96,10 @@ export function NewCard(props: NewCardProps) {
                                 class="btn btn-primary mt-2"
                                 onClick={async () => {
                                     try {
-                                        const result = await xml2js
-                                            .parseStringPromise(
+                                        const result =
+                                            (await xml2js.parseStringPromise(
                                                 importText,
-                                            ) as unknown;
+                                            )) as unknown;
                                         console.log("Parsed XML: ", result);
                                         const xmlError = isXmlKeyboard(result);
                                         if (xmlError) {
