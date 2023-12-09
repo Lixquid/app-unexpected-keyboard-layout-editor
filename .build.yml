@@ -15,6 +15,12 @@ tasks:
           yarn install
           yarn build
     - package: |
+          set +x
+          if [ -z "$OAUTH2_TOKEN" ]; then
+              echo "Skipping build"
+              exit 0
+          fi
+          set -x
           cd */dist
           tar czvf ../dist.tgz *
           hut pages publish -d $site ../dist.tgz
