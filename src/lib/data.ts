@@ -107,6 +107,7 @@ export function getKeyboardWidth(data: KeyboardData): number {
 export interface XmlKeyboard {
     keyboard: {
         $: {
+            bottomRow?: string;
             bottom_row?: string;
             width?: string;
         };
@@ -222,9 +223,10 @@ export function fromXmlKeyboard(xml: XmlKeyboard): KeyboardData {
         })),
         bottomRow:
             typeof xml.keyboard.$ === "object" &&
-            xml.keyboard.$.bottom_row === "false"
+            (xml.keyboard.$.bottom_row === "false" ||
+            xml.keyboard.$.bottomRow === "false"
                 ? false
-                : true,
+                : true),
         width:
             (typeof xml.keyboard.$ === "object" && num(xml.keyboard.$.width)) ||
             undefined,
@@ -257,6 +259,13 @@ export function isXmlKeyboard(xml: unknown): string | undefined {
         if (
             "bottom_row" in xml.keyboard.$ &&
             typeof xml.keyboard.$.bottom_row !== "string"
+        ) {
+            return "Keyboard bottom_row attribute is not a string";
+        }
+
+        if (
+            "bottomRow" in xml.keyboard.$ &&
+            typeof xml.keyboard.$.bottomRow !== "string"
         ) {
             return "Keyboard bottomRow attribute is not a string";
         }
