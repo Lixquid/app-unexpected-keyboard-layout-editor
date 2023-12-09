@@ -13,6 +13,7 @@ tasks:
     - build: |
           cd *
           yarn install
+          yarn lint
           yarn build
     - package: |
           set +x
