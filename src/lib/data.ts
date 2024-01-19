@@ -44,6 +44,8 @@ export interface RowData {
 export interface KeyboardData {
     /** The name of the keyboard. */
     name: string;
+    /** The writing script of the keyboard. */
+    script: string;
     /** Rows in the keyboard. */
     rows: RowData[];
     /** If the default bottom row should be added. */
@@ -85,6 +87,7 @@ export function newRow(): RowData {
 export function newKeyboard(): KeyboardData {
     return {
         name: "Custom Layout",
+        script: "",
         rows: [],
         bottomRow: true,
     };
@@ -111,6 +114,7 @@ export interface XmlKeyboard {
     keyboard: {
         $: {
             name?: string;
+            script?: string;
             bottomRow?: string;
             bottom_row?: string;
             width?: string;
@@ -159,6 +163,7 @@ export function toXmlKeyboard(data: KeyboardData): XmlKeyboard {
                 bottom_row: data.bottomRow ? undefined : "false",
                 width: data.width ? str(data.width) : undefined,
                 name: str(data.name),
+                script: data.script !== "" ? str(data.script) : undefined,
             },
             row: data.rows.map((row) => ({
                 $: {
@@ -209,6 +214,7 @@ export function fromXmlKeyboard(xml: XmlKeyboard): KeyboardData {
 
     return {
         name: str(xml.keyboard.$.name, "Custom Layout"),
+        script: str(xml.keyboard.$.script),
         rows: xml.keyboard.row.map((row) => ({
             height: (typeof row.$ === "object" && num(row.$.height)) || 1,
             shift: (typeof row.$ === "object" && num(row.$.shift)) || 0,
@@ -267,6 +273,13 @@ export function isXmlKeyboard(xml: unknown): string | undefined {
             typeof xml.keyboard.$.name !== "string"
         ) {
             return "Keyboard name attribute is not a string";
+        }
+
+        if (
+            "script" in xml.keyboard.$ &&
+            typeof xml.keyboard.$.script !== "string"
+        ) {
+            return "Keyboard script attribute is not a string";
         }
 
         if (

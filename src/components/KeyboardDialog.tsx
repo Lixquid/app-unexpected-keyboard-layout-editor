@@ -1,5 +1,6 @@
 import { useState } from "preact/hooks";
 import { KeyboardData } from "../lib/data";
+import { capitalize } from "../lib/util";
 
 /** Props for the KeyboardDialog component */
 export interface KeyboardDialogProps {
@@ -11,9 +12,23 @@ export interface KeyboardDialogProps {
     onClose: () => void;
 }
 
+const scripts = [
+    "arabic",
+    "armenian",
+    "bengali",
+    "cyrillic",
+    "devanagari",
+    "hangul",
+    "hebrew",
+    "latin",
+    "persian",
+    "urdu",
+];
+
 /** A dialog for editing the keyboard metadata */
 export function KeyboardDialog(props: KeyboardDialogProps) {
     const [name, setName] = useState(props.keyboard.name);
+    const [script, setScript] = useState(props.keyboard.script);
     const [hasBottomRow, setHasBottomRow] = useState(props.keyboard.bottomRow);
     const [width, setWidth] = useState(props.keyboard.width);
 
@@ -49,6 +64,56 @@ export function KeyboardDialog(props: KeyboardDialogProps) {
                                         )
                                     }
                                 />
+                            </div>
+                            <div class="mb-3">
+                                {/* Writing Script */}
+                                <label class="form-label" for="script-input">
+                                    Writing Script
+                                </label>
+                                <div class="input-group">
+                                    <input
+                                        id="script-input"
+                                        class="form-control"
+                                        type="text"
+                                        value={script}
+                                        onInput={(e) =>
+                                            setScript(
+                                                (e.target as HTMLInputElement)
+                                                    .value,
+                                            )
+                                        }
+                                    />
+                                    <button
+                                        class="btn btn-outline-secondary dropdown-toggle"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                    />
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a
+                                                class="dropdown-item"
+                                                href="#"
+                                                onClick={() => setScript("")}
+                                            >
+                                                None (Agnostic)
+                                            </a>
+                                        </li>
+                                        {scripts.map((script) => (
+                                            <li>
+                                                <a
+                                                    class="dropdown-item"
+                                                    href="#"
+                                                    onClick={() =>
+                                                        setScript(script)
+                                                    }
+                                                >
+                                                    {capitalize(script)}
+                                                </a>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
                             </div>
                             <div class="mb-3">
                                 {/* Bottom Row Setting */}
@@ -143,6 +208,7 @@ export function KeyboardDialog(props: KeyboardDialogProps) {
                                     props.setKeyboard({
                                         ...props.keyboard,
                                         name,
+                                        script,
                                         bottomRow: hasBottomRow,
                                         width,
                                     });

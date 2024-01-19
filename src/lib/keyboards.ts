@@ -2,6 +2,7 @@ import { KeyboardData } from "./data";
 
 export const qwerty: KeyboardData = {
     name: "QWERTY",
+    script: "latin",
     rows: [
         {
             height: 1,
@@ -418,6 +419,6 @@ export const qwerty: KeyboardData = {
 };
 
 export const keyboards: Record<string, KeyboardData> = {
-    Blank: { name: "Custom Layout", bottomRow: true, rows: [] },
+    Blank: { name: "Custom Layout", script: "", bottomRow: true, rows: [] },
     QWERTY: qwerty,
 };
