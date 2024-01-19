@@ -42,6 +42,8 @@ export interface RowData {
 
 /** Data structure for a keyboard. */
 export interface KeyboardData {
+    /** The name of the keyboard. */
+    name: string;
     /** Rows in the keyboard. */
     rows: RowData[];
     /** If the default bottom row should be added. */
@@ -82,6 +84,7 @@ export function newRow(): RowData {
 /** Create a default {@link KeyboardData}. */
 export function newKeyboard(): KeyboardData {
     return {
+        name: "Custom Layout",
         rows: [],
         bottomRow: true,
     };
@@ -107,6 +110,7 @@ export function getKeyboardWidth(data: KeyboardData): number {
 export interface XmlKeyboard {
     keyboard: {
         $: {
+            name?: string;
             bottomRow?: string;
             bottom_row?: string;
             width?: string;
@@ -154,6 +158,7 @@ export function toXmlKeyboard(data: KeyboardData): XmlKeyboard {
             $: {
                 bottom_row: data.bottomRow ? undefined : "false",
                 width: data.width ? str(data.width) : undefined,
+                name: data.name,
             },
             row: data.rows.map((row) => ({
                 $: {
@@ -184,8 +189,8 @@ export function toXmlKeyboard(data: KeyboardData): XmlKeyboard {
 
 /** Convert a {@link XmlKeyboard} to a {@link KeyboardData}. */
 export function fromXmlKeyboard(xml: XmlKeyboard): KeyboardData {
-    function str(value: string | undefined): string {
-        if (value === undefined) return "";
+    function str(value: string | undefined, defaultValue = ""): string {
+        if (value === undefined) return defaultValue;
         if (
             value.length === 2 &&
             value[0] === "\\" &&
@@ -203,6 +208,7 @@ export function fromXmlKeyboard(xml: XmlKeyboard): KeyboardData {
     }
 
     return {
+        name: str(xml.keyboard.$.name, "Custom Layout"),
         rows: xml.keyboard.row.map((row) => ({
             height: (typeof row.$ === "object" && num(row.$.height)) || 1,
             shift: (typeof row.$ === "object" && num(row.$.shift)) || 0,
@@ -254,6 +260,13 @@ export function isXmlKeyboard(xml: unknown): string | undefined {
     if ("$" in xml.keyboard) {
         if (xml.keyboard.$ === null || typeof xml.keyboard.$ !== "object") {
             return "Keyboard attributes are not an object";
+        }
+
+        if (
+            "name" in xml.keyboard.$ &&
+            typeof xml.keyboard.$.name !== "string"
+        ) {
+            return "Keyboard name attribute is not a string";
         }
 
         if (

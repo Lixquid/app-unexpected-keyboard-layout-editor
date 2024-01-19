@@ -13,6 +13,7 @@ export interface KeyboardDialogProps {
 
 /** A dialog for editing the keyboard metadata */
 export function KeyboardDialog(props: KeyboardDialogProps) {
+    const [name, setName] = useState(props.keyboard.name);
     const [hasBottomRow, setHasBottomRow] = useState(props.keyboard.bottomRow);
     const [width, setWidth] = useState(props.keyboard.width);
 
@@ -31,6 +32,24 @@ export function KeyboardDialog(props: KeyboardDialogProps) {
                             />
                         </div>
                         <div class="modal-body text-wrap">
+                            <div class="mb-3">
+                                {/* Name */}
+                                <label class="form-label" for="name-input">
+                                    Name
+                                </label>
+                                <input
+                                    id="name-input"
+                                    class="form-control"
+                                    type="text"
+                                    value={name}
+                                    onInput={(e) =>
+                                        setName(
+                                            (e.target as HTMLInputElement)
+                                                .value,
+                                        )
+                                    }
+                                />
+                            </div>
                             <div class="mb-3">
                                 {/* Bottom Row Setting */}
                                 <div class="form-check form-switch">
@@ -123,6 +142,7 @@ export function KeyboardDialog(props: KeyboardDialogProps) {
                                 onClick={() => {
                                     props.setKeyboard({
                                         ...props.keyboard,
+                                        name,
                                         bottomRow: hasBottomRow,
                                         width,
                                     });
