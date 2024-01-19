@@ -158,7 +158,7 @@ export function toXmlKeyboard(data: KeyboardData): XmlKeyboard {
             $: {
                 bottom_row: data.bottomRow ? undefined : "false",
                 width: data.width ? str(data.width) : undefined,
-                name: data.name,
+                name: str(data.name),
             },
             row: data.rows.map((row) => ({
                 $: {
