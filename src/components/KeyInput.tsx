@@ -1,4 +1,4 @@
-import { useState } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 
 /** Props for the KeyInput component */
 export interface KeyInputProps {
@@ -147,6 +147,18 @@ const specialKeys = [
 /** An input for modifying a central or corner key */
 export function KeyInput(props: KeyInputProps) {
     const [autoComplete, setAutoComplete] = useState<string[]>([]);
+    const [showAutoComplete, setShowAutoComplete] = useState(false);
+    const autoCompleteRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        // Add a click listener to the document to hide the autocomplete
+        // suggestions when the user clicks outside the suggestions
+        const listener = () => {
+            setShowAutoComplete(false);
+        };
+        document.addEventListener("click", listener);
+        return () => document.removeEventListener("click", listener);
+    }, []);
 
     return (
         <div class="position-relative">
@@ -170,13 +182,17 @@ export function KeyInput(props: KeyInputProps) {
                             ),
                         );
                     }
+                    setShowAutoComplete(true);
                     props.updateInput(value);
                 }}
+                onFocus={() => setShowAutoComplete(true)}
+                onClick={(e) => e.stopPropagation()}
             />
-            {autoComplete.length > 0 && (
+            {autoComplete.length > 0 && showAutoComplete && (
                 <div
                     class="position-absolute w-100 top-100 list-group"
                     style={{ zIndex: 1 }}
+                    ref={autoCompleteRef}
                 >
                     {autoComplete.map((key, i) => (
                         <button
