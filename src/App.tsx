@@ -5,6 +5,7 @@ import { NewCard } from "./components/NewCard";
 import { Row } from "./components/Row";
 import { KeyboardData, newRow } from "./lib/data";
 import { qwerty } from "./lib/keyboards";
+import { HistoryQueue, useInitRef } from "./lib/util";
 
 /** Toggles bootstrap theme between light and dark */
 function toggleDarkMode() {
@@ -15,11 +16,19 @@ function toggleDarkMode() {
     }
 }
 
-export function App() {
-    const [keyboard, setKeyboard] = useState<KeyboardData>(qwerty);
-    const [showKeyboardDialog, setShowKeyboardDialog] = useState(false);
+const HISTORY_SIZE = 100;
 
-    console.log(JSON.stringify(keyboard));
+export function App() {
+    const [keyboard, setKeyboardRaw] = useState<KeyboardData>(qwerty);
+    const [showKeyboardDialog, setShowKeyboardDialog] = useState(false);
+    const kbHistory = useInitRef(
+        () => new HistoryQueue<KeyboardData>(keyboard, HISTORY_SIZE),
+    );
+
+    function setKeyboard(kb: KeyboardData) {
+        kbHistory.current.add(kb);
+        setKeyboardRaw(kb);
+    }
 
     return (
         <>
@@ -61,18 +70,46 @@ export function App() {
                 <NewCard setKeyboard={setKeyboard} />
                 <div class="card" style={{ minWidth: "50rem" }}>
                     <div class="card-header">
+                        <h4 class="mb-0">Keyboard Layout</h4>
+                    </div>
+                    <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h4 class="mb-0">Keyboard Layout</h4>
+                            <div>
+                                <button
+                                    class="btn btn-outline-secondary me-2"
+                                    onClick={() => {
+                                        setKeyboardRaw(
+                                            kbHistory.current.undo(),
+                                        );
+                                    }}
+                                    disabled={kbHistory.current.atOldest}
+                                >
+                                    <i class="bi bi-arrow-counterclockwise me-2" />
+                                    Undo
+                                </button>
+                                <button
+                                    class="btn btn-outline-secondary"
+                                    onClick={() => {
+                                        setKeyboardRaw(
+                                            kbHistory.current.redo(),
+                                        );
+                                    }}
+                                    disabled={kbHistory.current.atNewest}
+                                >
+                                    <i class="bi bi-arrow-clockwise me-2" />
+                                    Redo
+                                </button>
+                            </div>
                             <button
-                                class="btn btn-outline-primary px-4"
+                                class="btn btn-outline-primary"
                                 onClick={() => setShowKeyboardDialog(true)}
                                 title="Keyboard Settings"
                             >
-                                <i class="bi bi-gear-fill" />
+                                <i class="bi bi-gear-fill me-2" />
+                                Keyboard Settings
                             </button>
                         </div>
-                    </div>
-                    <div class="card-body">
+                        <hr />
                         {keyboard.rows.map((row, i) => (
                             <Row
                                 rowData={row}
