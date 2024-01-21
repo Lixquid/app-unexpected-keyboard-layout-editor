@@ -13,8 +13,8 @@ tasks:
     - build: |
           cd *
           yarn install
-          yarn lint
           yarn build
+          yarn lint
     - package: |
           set +x
           if [ -z "$OAUTH2_TOKEN" ]; then
