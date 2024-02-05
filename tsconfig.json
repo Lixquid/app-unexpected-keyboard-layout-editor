@@ -1,6 +1,15 @@
 {
     "compilerOptions": {
         "strict": true,
+        "allowUnusedLabels": false,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "noUncheckedIndexedAccess": true,
+        "forceConsistentCasingInFileNames": true,
+        "skipLibCheck": true,
+
         // Configure TypeScript to use preact instead of react.
         "jsxImportSource": "preact",
         "jsx": "react-jsx",

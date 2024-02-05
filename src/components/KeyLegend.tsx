@@ -79,7 +79,7 @@ export function KeyLegend(props: KeyLegendProps) {
     let content: string | JSX.Element = str;
 
     if (str in legendStrings) {
-        content = legendStrings[str];
+        content = legendStrings[str]!;
     } else if (str in legendIcons) {
         content = <i class={`bi bi-${legendIcons[str]}`} />;
     }

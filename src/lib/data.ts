@@ -199,9 +199,9 @@ export function fromXmlKeyboard(xml: XmlKeyboard): KeyboardData {
         if (
             value.length === 2 &&
             value[0] === "\\" &&
-            androidEscapeChars.test(value[1])
+            androidEscapeChars.test(value[1]!)
         ) {
-            return value[1];
+            return value[1]!;
         }
         return value;
     }

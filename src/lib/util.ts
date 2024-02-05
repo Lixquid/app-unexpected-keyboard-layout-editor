@@ -38,16 +38,16 @@ export class HistoryQueue<T> {
 
     /** Moves the history pointer to a change one step older, and returns the item. */
     undo(): T {
-        if (this.atOldest) return this.queue[0];
+        if (this.atOldest) return this.queue[0]!;
         this.pointer--;
-        return this.queue[this.pointer];
+        return this.queue[this.pointer]!;
     }
 
     /** Moves the history pointer to a change one step newer, and returns the item. */
     redo(): T {
-        if (this.atNewest) return this.queue[this.queue.length - 1];
+        if (this.atNewest) return this.queue[this.queue.length - 1]!;
         this.pointer++;
-        return this.queue[this.pointer];
+        return this.queue[this.pointer]!;
     }
 
     /** Adds a new item to the queue, clearing all items ahead of the history pointer, and removing the oldest item if the queue is full. */

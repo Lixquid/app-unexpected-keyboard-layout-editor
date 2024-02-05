@@ -52,9 +52,9 @@ export function NewCard(props: NewCardProps) {
                                 type="button"
                                 class="btn btn-primary mt-2"
                                 onClick={() => {
-                                    props.setKeyboard(
-                                        keyboards[selectedTemplate],
-                                    );
+                                    const k = keyboards[selectedTemplate];
+                                    if (k === undefined) return;
+                                    props.setKeyboard(k);
                                 }}
                                 disabled={selectedTemplate.length === 0}
                             >

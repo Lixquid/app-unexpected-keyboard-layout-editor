@@ -11,8 +11,8 @@ import { HistoryQueue, useInitRef } from "./lib/util";
 function toggleDarkMode() {
     const html = document.querySelector("html");
     if (html !== null) {
-        html.dataset.bsTheme =
-            html.dataset.bsTheme === "dark" ? "light" : "dark";
+        html.dataset["bsTheme"] =
+            html.dataset["bsTheme"] === "dark" ? "light" : "dark";
     }
 }
 
