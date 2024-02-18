@@ -1,7 +1,10 @@
+import { z } from "zod";
+
 //#region Data Structures
+
 /** Data structure for a single key. */
 export interface KeyData {
-    /** Width of the key. Rows have a total width of 10. Defaults to 1. */
+    /** Width of the key. Defaults to 1. */
     width: number;
     /** Horizontal offset of the key. Defaults to 0. */
     shift: number;
@@ -109,40 +112,59 @@ export function getKeyboardWidth(data: KeyboardData): number {
 //#endregion
 
 //#region Serialization
-/** A xml2js target keyboard data structure. */
-export interface XmlKeyboard {
-    keyboard: {
-        $: {
-            name?: string;
-            script?: string;
-            bottomRow?: string;
-            bottom_row?: string;
-            width?: string;
-        };
-        row: {
-            $: {
-                height?: string;
-                shift?: string;
-            };
-            key: {
-                $: {
-                    width?: string;
-                    shift?: string;
-                    key0?: string;
-                    key1?: string;
-                    key2?: string;
-                    key3?: string;
-                    key4?: string;
-                    key5?: string;
-                    key6?: string;
-                    key7?: string;
-                    key8?: string;
-                    slider?: string;
-                };
-            }[];
-        }[];
-    };
-}
+
+/* xml2js parses xml out to objects where attributes are stored in the `$` key,
+   and child elements are stored in the child element's name. */
+
+const xmlSchema = z.object({
+    keyboard: z.object({
+        $: z
+            .object({
+                name: z.string().optional(),
+                script: z.string().optional(),
+                bottom_row: z.coerce.boolean().optional(),
+                /** Deprecated alias for `bottom_row`. */
+                bottomRow: z.coerce.boolean().optional(),
+                width: z.coerce.number().positive().optional(),
+            })
+            .transform((o) => ({
+                name: o.name,
+                script: o.script,
+                width: o.width,
+                bottom_row: o.bottom_row ?? o.bottomRow,
+            }))
+            .optional(),
+        row: z.array(
+            z.object({
+                $: z
+                    .object({
+                        height: z.coerce.number().positive().optional(),
+                        shift: z.coerce.number().positive().optional(),
+                    })
+                    .optional(),
+                key: z.array(
+                    z.object({
+                        $: z.object({
+                            width: z.coerce.number().positive().optional(),
+                            shift: z.coerce.number().positive().optional(),
+                            key0: z.string().optional(),
+                            key1: z.string().optional(),
+                            key2: z.string().optional(),
+                            key3: z.string().optional(),
+                            key4: z.string().optional(),
+                            key5: z.string().optional(),
+                            key6: z.string().optional(),
+                            key7: z.string().optional(),
+                            key8: z.string().optional(),
+                            slider: z.coerce.boolean().optional(),
+                        }),
+                    }),
+                ),
+            }),
+        ),
+    }),
+});
+export type XmlKeyboard = z.infer<typeof xmlSchema>;
 
 // A set of characters that need to be escaped in android XML files.
 const androidEscapeChars = /^[@#\\?]$/;
@@ -160,21 +182,21 @@ export function toXmlKeyboard(data: KeyboardData): XmlKeyboard {
     return {
         keyboard: {
             $: {
-                bottom_row: data.bottomRow ? undefined : "false",
-                width: data.width ? str(data.width) : undefined,
+                bottom_row: data.bottomRow ? undefined : false,
+                width: data.width,
                 name: str(data.name),
                 script: data.script !== "" ? str(data.script) : undefined,
             },
             row: data.rows.map((row) => ({
                 $: {
-                    height: row.height !== 1 ? str(row.height) : undefined,
-                    shift: row.shift !== 0 ? str(row.shift) : undefined,
+                    height: row.height !== 1 ? row.height : undefined,
+                    shift: row.shift !== 0 ? row.shift : undefined,
                 },
                 key: row.keys.map((key) => ({
                     $: {
-                        width: key.width !== 1 ? str(key.width) : undefined,
-                        shift: key.shift !== 0 ? str(key.shift) : undefined,
-                        slider: key.slider ? "true" : undefined,
+                        width: key.width !== 1 ? key.width : undefined,
+                        shift: key.shift !== 0 ? key.shift : undefined,
+                        slider: key.slider ? true : undefined,
 
                         key0: key.key0 !== "" ? str(key.key0) : undefined,
                         key1: key.key1 !== "" ? str(key.key1) : undefined,
@@ -213,14 +235,14 @@ export function fromXmlKeyboard(xml: XmlKeyboard): KeyboardData {
     }
 
     return {
-        name: str(xml.keyboard.$.name, "Custom Layout"),
-        script: str(xml.keyboard.$.script),
+        name: str(xml.keyboard?.$?.name, "Custom Layout"),
+        script: str(xml.keyboard?.$?.script),
         rows: xml.keyboard.row.map((row) => ({
-            height: (typeof row.$ === "object" && num(row.$.height)) || 1,
-            shift: (typeof row.$ === "object" && num(row.$.shift)) || 0,
+            height: row.$?.height ?? 1,
+            shift: row.$?.shift ?? 0,
             keys: row.key.map((key) => ({
-                width: num(key.$.width) || 1,
-                shift: num(key.$.shift) || 0,
+                width: key.$.width ?? 1,
+                shift: key.$.shift ?? 0,
                 key0: str(key.$.key0),
                 key1: str(key.$.key1),
                 key2: str(key.$.key2),
@@ -230,166 +252,20 @@ export function fromXmlKeyboard(xml: XmlKeyboard): KeyboardData {
                 key6: str(key.$.key6),
                 key7: str(key.$.key7),
                 key8: str(key.$.key8),
-                slider: key.$.slider === "true",
+                slider: key.$.slider ?? false,
             })),
         })),
-        bottomRow:
-            typeof xml.keyboard.$ === "object" &&
-            (xml.keyboard.$.bottom_row === "false" ||
-            xml.keyboard.$.bottomRow === "false"
-                ? false
-                : true),
-        width:
-            (typeof xml.keyboard.$ === "object" && num(xml.keyboard.$.width)) ||
-            undefined,
+        bottomRow: xml.keyboard.$?.bottom_row ?? true,
+        width: xml.keyboard.$?.width,
     };
 }
 
 /** Returns `undefined` if an object is an {@link XmlKeyboard}, otherwise an error message. */
 export function isXmlKeyboard(xml: unknown): string | undefined {
-    function isArray(obj: unknown): obj is unknown[] {
-        return Array.isArray(obj);
+    const result = xmlSchema.safeParse(xml);
+    if (!result.success) {
+        return result.error.message;
     }
-
-    if (typeof xml !== "object" || xml === null) {
-        return "Not an xml object";
-    }
-
-    if (
-        !("keyboard" in xml) ||
-        xml.keyboard === null ||
-        typeof xml.keyboard !== "object"
-    ) {
-        return "Top level element is not a keyboard";
-    }
-
-    if ("$" in xml.keyboard) {
-        if (xml.keyboard.$ === null || typeof xml.keyboard.$ !== "object") {
-            return "Keyboard attributes are not an object";
-        }
-
-        if (
-            "name" in xml.keyboard.$ &&
-            typeof xml.keyboard.$.name !== "string"
-        ) {
-            return "Keyboard name attribute is not a string";
-        }
-
-        if (
-            "script" in xml.keyboard.$ &&
-            typeof xml.keyboard.$.script !== "string"
-        ) {
-            return "Keyboard script attribute is not a string";
-        }
-
-        if (
-            "bottom_row" in xml.keyboard.$ &&
-            typeof xml.keyboard.$.bottom_row !== "string"
-        ) {
-            return "Keyboard bottom_row attribute is not a string";
-        }
-
-        if (
-            "bottomRow" in xml.keyboard.$ &&
-            typeof xml.keyboard.$.bottomRow !== "string"
-        ) {
-            return "Keyboard bottomRow attribute is not a string";
-        }
-
-        if (
-            "width" in xml.keyboard.$ &&
-            typeof xml.keyboard.$.width !== "string"
-        ) {
-            return "Keyboard width attribute is not a string";
-        }
-    }
-
-    if (!("row" in xml.keyboard) || !isArray(xml.keyboard.row)) {
-        return "Keyboard is missing rows";
-    }
-
-    for (const row of xml.keyboard.row) {
-        if (typeof row !== "object" || row === null) {
-            return "Row is not an object";
-        }
-
-        if ("$" in row) {
-            if (row.$ === null || typeof row.$ !== "object") {
-                return "Row is missing attributes";
-            }
-
-            if ("height" in row.$ && typeof row.$.height !== "string") {
-                return "Row height attribute is not a string";
-            }
-
-            if ("shift" in row.$ && typeof row.$.shift !== "string") {
-                return "Row shift attribute is not a string";
-            }
-        }
-
-        if (!("key" in row) || !isArray(row.key)) {
-            return "Row is missing keys";
-        }
-
-        for (const key of row.key) {
-            if (typeof key !== "object" || key === null) {
-                return "Key is not an object";
-            }
-
-            if (!("$" in key) || key.$ === null || typeof key.$ !== "object") {
-                return "Key is missing attributes";
-            }
-
-            if ("width" in key.$ && typeof key.$.width !== "string") {
-                return "Key width attribute is not a string";
-            }
-
-            if ("shift" in key.$ && typeof key.$.shift !== "string") {
-                return "Key shift attribute is not a string";
-            }
-
-            if ("slider" in key.$ && typeof key.$.slider !== "string") {
-                return "Key slider attribute is not a string";
-            }
-
-            if ("key0" in key.$ && typeof key.$.key0 !== "string") {
-                return "Key key0 attribute is not a string";
-            }
-
-            if ("key1" in key.$ && typeof key.$.key1 !== "string") {
-                return "Key key1 attribute is not a string";
-            }
-
-            if ("key2" in key.$ && typeof key.$.key2 !== "string") {
-                return "Key key2 attribute is not a string";
-            }
-
-            if ("key3" in key.$ && typeof key.$.key3 !== "string") {
-                return "Key key3 attribute is not a string";
-            }
-
-            if ("key4" in key.$ && typeof key.$.key4 !== "string") {
-                return "Key key4 attribute is not a string";
-            }
-
-            if ("key5" in key.$ && typeof key.$.key5 !== "string") {
-                return "Key key5 attribute is not a string";
-            }
-
-            if ("key6" in key.$ && typeof key.$.key6 !== "string") {
-                return "Key key6 attribute is not a string";
-            }
-
-            if ("key7" in key.$ && typeof key.$.key7 !== "string") {
-                return "Key key7 attribute is not a string";
-            }
-
-            if ("key8" in key.$ && typeof key.$.key8 !== "string") {
-                return "Key key8 attribute is not a string";
-            }
-        }
-    }
-
     return undefined;
 }
 

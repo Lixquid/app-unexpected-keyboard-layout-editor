@@ -100,7 +100,9 @@ export function NewCard(props: NewCardProps) {
                                             (await xml2js.parseStringPromise(
                                                 importText,
                                             )) as unknown;
+
                                         console.log("Parsed XML: ", result);
+
                                         const xmlError = isXmlKeyboard(result);
                                         if (xmlError) {
                                             throw new Error(
@@ -111,6 +113,7 @@ export function NewCard(props: NewCardProps) {
                                         const k = fromXmlKeyboard(
                                             result as XmlKeyboard,
                                         );
+
                                         console.log("Parsed Keyboard: ", k);
                                         props.setKeyboard(k);
                                         setError(null);
